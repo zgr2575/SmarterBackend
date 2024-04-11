@@ -1,0 +1,30 @@
+{
+  "name": "SimpleBackend",
+  "version": "1",
+  "type": "module",
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "format": "npx prettier . --write",
+    "upd": "git pull --force --allow-unrelated-histories"
+  },
+  "author": "zgr2575",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@tomphttp/bare-server-node": "2.0.3",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.3",
+    "express-basic-auth": "^1.2.1",
+    "jquery": "^3.7.1",
+    "json-server": "^1.0.0-alpha.23",
+    "jsonwebtoken": "^9.0.2",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "prettier": "3.2.5"
+  }
+}
