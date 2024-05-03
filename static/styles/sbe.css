@@ -1,0 +1,32 @@
+/* 
+This is a default css for smarterbackend fronted stuff ect, keep if you want i have sbe branding 
+everywhere
+*/
+* { 
+    color: white;
+}
+div {
+background-color: blueviolet;
+border-radius: 5px;
+width: 50%;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+body {
+background-attachment: fixed;
+background-color: rgb(30, 27, 37);
+padding-top: 36px;
+}
+.button {
+    font: bold 11px Quicksand;
+    text-decoration: none;
+    background-color: #18558d;
+    color: #e6e6e6;
+    padding: 2px 6px 2px 6px;
+    border-top: 1px solid #cccccc00;
+    border-right: 1px solid #33333300;
+    border-bottom: 1px solid #33333300;
+    border-left: 1px solid #CCCCCC00;
+    border-radius: 5px;
+    width: 50%;
+  }
