@@ -1,98 +1,154 @@
-  import express from "express";
-  import basicAuth from "express-basic-auth";
-  import http from "node:http";
-  import { exec } from "child_process"
-  import { createBareServer } from "@tomphttp/bare-server-node";
-  import path from "node:path";
-  import cors from "cors";
-  import config from "./config.js";
-  const __dirname = process.cwd();
-  const server = http.createServer();
-  const app = express(server);
-  const bareServer = createBareServer("/o/");
-  import fetch from "node-fetch";
-  const PORT = process.env.PORT || 8080;
-  var v = 1;
-  console.log("Current Version of SBE: " + v);
-  if (config.challenge) {
-    console.log("Password protection is enabled");
-    console.log("Please set the passwords in the config.js file");
- 
-      app.use(
-        basicAuth({
-          users: config.users,
-          challenge: true,
-        }),
-      );
-    
+import express from "express";
+import basicAuth from "express-basic-auth";
+import http from "node:http";
+import { createBareServer } from "@tomphttp/bare-server-node";
+import path from "node:path";
+import cors from "cors";
+import config from "./config.js";
+import os from "os";
+import util from "util";
+import { promisify } from 'util';
+import { exec } from 'child_process';
+
+const __dirname = process.cwd();
+const server = http.createServer();
+const app = express(server);
+const bareServer = createBareServer("/o/");
+const PORT = process.env.PORT || 8080;
+const onlineUsers = new Set();
+let totalReqs = 0;
+let v = config.version;
+let upd = false;
+console.log(`
+  +---------------------------------+
+  |   S m a r t e r B a c k e n d   |
+  +---------------------------------+
+          A "Smarter" solution!
+`);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.static(path.join(__dirname, "static")));
+
+const execPromise = promisify(exec);
+
+const getTotalDiskSpace = () => {
+  const totalDiskSpaceInBytes = os.totalmem();
+  const totalDiskSpaceInGB = (totalDiskSpaceInBytes / (1024 ** 3)).toFixed(2) + " GB";
+  return totalDiskSpaceInGB;
+};
+
+const getNetworkStats = async () => {
+  try {
+    const { stdout } = await execPromise("netstat -e");
+    const lines = stdout.split("\n");
+    const networkStats = {
+      sent: lines[2] ? lines[2].trim().split(/\s+/)[1] : "N/A",
+      received: lines[2] ? lines[2].trim().split(/\s+/)[0] : "N/A",
+    };
+    return networkStats;
+  } catch (error) {
+    console.error("Error fetching network stats:", error);
+    return {
+      sent: "N/A",
+      received: "N/A",
+    };
   }
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-  app.use(cors());
-  app.use(express.static(path.join(__dirname, "static")));
+};
 
-  if (config.routes !== false) {
-    const routes = [
-      { path: "/", file: "index.html" },
-       { path: "/!", file: "backinfo.html" },
-    ];
+server.on("connection", (socket) => {
+  const userIdentifier = socket.remoteAddress;
+  onlineUsers.add(userIdentifier);
+  console.log(`User connected. Total unique online users: ${onlineUsers.size}`);
+});
 
-    routes.forEach((route) => {
-      app.get(route.path, (req, res) => {
-        res.sendFile(path.join(__dirname, "static", route.file));
-      });
-    });
-  }
-  if (config.local !== false) {
-    app.get("/y/*", (req, res, next) => {
-      const baseUrl = "https://raw.githubusercontent.com/ypxa/y/main";
-      fetchData(req, res, next, baseUrl);
-    });
+app.get("/d/data", async (req, res) => {
+  const diskSpace = getTotalDiskSpace();
+  const networkStats = await getNetworkStats();
 
-    app.get("/f/*", (req, res, next) => {
-      const baseUrl = "https://raw.githubusercontent.com/4x-a/x/fixy";
-      fetchData(req, res, next, baseUrl);
-    });
-  }
-
-  const fetchData = async (req, res, next, baseUrl) => {
-    try {
-      const reqTarget = `${baseUrl}/${req.params[0]}`;
-      const asset = await fetch(reqTarget);
-
-      if (asset.ok) {
-        const data = await asset.arrayBuffer();
-        res.end(Buffer.from(data));
-      } else {
-        next();
-      }
-    } catch (error) {
-      console.error("Error fetching:", error);
-      next(error);
-    }
+  const serverStats = {
+    server: "Smarter Back End v5",
+    version: v,
+    updateAvailable: upd,
+    serverUptime: process.uptime(),
+    serverMemory: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + " MB",
+    serverId: Math.floor(Math.random() * 101),
+    serverIdentity: "SBE SERVER",
+    cpuUsage: process.cpuUsage(),
+    diskSpace: diskSpace,
+    networkStats: networkStats,
   };
-  server.on("request", (req, res) => {
-    if (bareServer.shouldRoute(req)) {
-      bareServer.routeRequest(req, res);
-    } else {
-      app(req, res);
-    }
-  });
 
-  server.on("upgrade", (req, socket, head) => {
-    if (bareServer.shouldRoute(req)) {
-      bareServer.routeUpgrade(req, socket, head);
-    } else {
-      socket.end();
-    }
-  });
+  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING");
+  res.json(serverStats);
+  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN SENT | STATUS: SENT");
+});
 
+app.use((req, res) => {
+  res.status(404).send();
+});
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send();
+});
 
-  server.on("listening", () => {
-    console.log(`Running at http://localhost:${PORT}`);
-  });
+server.on("request", (req, res) => {
+  if (bareServer.shouldRoute(req)) {
+    bareServer.routeRequest(req, res);
+  } else {
+    app(req, res);
+  }
+});
 
-  server.listen({
-    port: PORT,
-  });
+server.on("upgrade", (req, socket, head) => {
+  if (bareServer.shouldRoute(req)) {
+    bareServer.routeUpgrade(req, socket, head);
+  } else {
+    socket.end();
+  }
+});
+
+server.on("connection", (socket) => {
+  totalReqs++;
+  console.log(`Request received. Total requests: ${totalReqs}`);
+});
+
+if (config.challenge) {
+  console.log("Password protection is enabled");
+  console.log("Please set the passwords in the config.js file");
+
+  if (config.envusers) {
+    app.use((req, res, next) => {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith("Basic ")) {
+        res.set("WWW-Authenticate", 'Basic realm="Authorization Required"');
+        return res.status(401).send("Authorization Required");
+      }
+
+      const credentials = Buffer.from(authHeader.split(" ")[1], "base64").toString();
+      const [username, password] = credentials.split(":");
+
+      if (users[username] && users[username] === password) {
+        return next();
+      } else {
+        res.set("WWW-Authenticate", 'Basic realm="Authorization Required"');
+        return res.status(401).send("Authorization Required");
+      }
+    });
+  } else {
+    app.use(
+      basicAuth({
+        users: config.users,
+        challenge: true,
+      }),
+    );
+  }
+}
+
+server.on("listening", () => {
+  console.log(`[SBE]: LISTENING ON PORT ${PORT}`);
+});
+
+server.listen({ port: PORT });
