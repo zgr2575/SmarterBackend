@@ -2,19 +2,30 @@
 
 Welcome to SmarterBackend - your go-to solution for efficient backend operations on Node.js. This repository houses the essential codebase that empowers SmarterBackend, providing a streamlined approach to handling backend tasks. With a focus on simplicity and performance, SmarterBackend offers a reliable solution for managing server-side operations in web applications. Explore the straightforward power of SmarterBackend and elevate your backend computing experience today.
 
-## Change Log: v2
+## Change Log: v4
 
-1. **Added System Monitoring Features**: The code now includes functions to retrieve and display total disk space available and network statistics. This data is exposed through the new endpoint "/d/data", providing detailed server information like version, uptime, memory usage, CPU usage, disk space, and network stats.
+Modularization:
 
-2. **Enhanced User Tracking**: User connections are now tracked using a Set to manage online users and display the total unique online users each time a connection is made.
+Created separate routes.js, logger.js, and utils.js files for better code organization.
+Logging Improvements:
 
-3. **Improved Error Handling**: Error handling has been enhanced with specific error responses for 404 and 500 status codes. Additionally, error logging and response messages are implemented to provide better feedback to clients.
+Added logging initialization messages to index.js, routes.js, and utils.js.
+Enhanced logger configuration to optionally log to a file and added log level customization in config.js.
+Configuration Enhancements:
 
-4. **Security Enhancements**: Password protection has received an update to allow for multiple authentication mechanisms based on configuration. The code now supports both custom username-password authentication and basic authentication using stored user credentials.
+Improved config.js with additional settings for logging, server behavior, and request handling.
+Middleware Enhancements:
 
-5. **Code Refactoring and Clean-up**: The codebase has undergone refactoring for better readability and maintainability. New modules like 'os' and 'util' are imported for system-related functionalities, and deprecated modules are removed. The updated code showcases a more organized and efficient structure.
+Added request size limits for JSON and URL-encoded data.
+Added optional HTTP request logging with Morgan, integrated with Winston for combined logging.
+Routing Enhancements:
 
-These changes collectively enhance the functionality, security, and maintainability of the "Smarter Backend" server, offering a smarter solution for server-side operations and monitoring.
+Separated route handling into routes.js, with specific logging for route initialization and request handling.
+Utility Enhancements:
+
+Moved disk space and network statistics functions to utils.js for better modularization.
+Code Refactoring:
+
 
 ## Install
 
