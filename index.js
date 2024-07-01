@@ -4,11 +4,10 @@ import http from "node:http";
 import { createBareServer } from "@tomphttp/bare-server-node";
 import path from "node:path";
 import cors from "cors";
-import config from "./config.js";
 import os from "os";
 import util from "util";
-import { promisify } from 'util';
-import { exec } from 'child_process';
+import { promisify } from "util";
+import { exec } from "child_process";
 
 const __dirname = process.cwd();
 const server = http.createServer();
@@ -17,7 +16,7 @@ const bareServer = createBareServer("/o/");
 const PORT = process.env.PORT || 8080;
 const onlineUsers = new Set();
 let totalReqs = 0;
-let v = config.version;
+let v = 3;
 let upd = false;
 console.log(`
   +---------------------------------+
@@ -35,7 +34,8 @@ const execPromise = promisify(exec);
 
 const getTotalDiskSpace = () => {
   const totalDiskSpaceInBytes = os.totalmem();
-  const totalDiskSpaceInGB = (totalDiskSpaceInBytes / (1024 ** 3)).toFixed(2) + " GB";
+  const totalDiskSpaceInGB =
+    (totalDiskSpaceInBytes / 1024 ** 3).toFixed(2) + " GB";
   return totalDiskSpaceInGB;
 };
 
@@ -72,7 +72,8 @@ app.get("/d/data", async (req, res) => {
     version: v,
     updateAvailable: upd,
     serverUptime: process.uptime(),
-    serverMemory: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + " MB",
+    serverMemory:
+      (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + " MB",
     serverId: Math.floor(Math.random() * 101),
     serverIdentity: "SBE SERVER",
     cpuUsage: process.cpuUsage(),
@@ -80,7 +81,9 @@ app.get("/d/data", async (req, res) => {
     networkStats: networkStats,
   };
 
-  console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING");
+  console.log(
+    "[SMARTERBACKEND]: SERVER DATA HAS BEEN REQUESTED | STATUS: PACKAGING",
+  );
   res.json(serverStats);
   console.log("[SMARTERBACKEND]: SERVER DATA HAS BEEN SENT | STATUS: SENT");
 });
@@ -114,39 +117,6 @@ server.on("connection", (socket) => {
   totalReqs++;
   console.log(`Request received. Total requests: ${totalReqs}`);
 });
-
-if (config.challenge) {
-  console.log("Password protection is enabled");
-  console.log("Please set the passwords in the config.js file");
-
-  if (config.envusers) {
-    app.use((req, res, next) => {
-      const authHeader = req.headers.authorization;
-      if (!authHeader || !authHeader.startsWith("Basic ")) {
-        res.set("WWW-Authenticate", 'Basic realm="Authorization Required"');
-        return res.status(401).send("Authorization Required");
-      }
-
-      const credentials = Buffer.from(authHeader.split(" ")[1], "base64").toString();
-      const [username, password] = credentials.split(":");
-
-      if (users[username] && users[username] === password) {
-        return next();
-      } else {
-        res.set("WWW-Authenticate", 'Basic realm="Authorization Required"');
-        return res.status(401).send("Authorization Required");
-      }
-    });
-  } else {
-    app.use(
-      basicAuth({
-        users: config.users,
-        challenge: true,
-      }),
-    );
-  }
-}
-
 server.on("listening", () => {
   console.log(`[SBE]: LISTENING ON PORT ${PORT}`);
 });

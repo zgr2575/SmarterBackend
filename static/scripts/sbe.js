@@ -6,7 +6,9 @@
 */
 var sbev = 1;
 var element = document.createElement("sbe");
-element.appendChild(document.createTextNode('The man who mistook his wife for a hat'));
-document.getElementById('sbe').appendChild(element);
+element.appendChild(
+  document.createTextNode("The man who mistook his wife for a hat"),
+);
+document.getElementById("sbe").appendChild(element);
 
-doccument.createElemen
+doccument.createElemen;
