@@ -1,6 +1,6 @@
 {
   "name": "SmarterBackend",
-  "version": "3",
+  "version": "6",
   "type": "module",
   "engines": {
     "npm": ">=7.0.0",

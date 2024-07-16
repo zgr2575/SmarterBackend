@@ -1,3 +1,13 @@
+### v4.0.0
+
+- **Modularization**: Created separate `routes.js`, `logger.js`, and `utils.js`.
+- **Logging Improvements**: Added initialization messages and enhanced configuration.
+- **Configuration Enhancements**: Improved `config.js` with additional settings.
+- **Middleware Enhancements**: Added request size limits and integrated Morgan with Winston.
+- **Routing Enhancements**: Decoupled route handling with specific logging.
+- **Utility Enhancements**: Moved utility functions to `utils.js`.
+
+
 Change Log: v2
 Added System Monitoring Features: The code now includes functions to retrieve and display total disk space available and network statistics. This data is exposed through the new endpoint "/d/data", providing detailed server information like version, uptime, memory usage, CPU usage, disk space, and network stats.
 
@@ -7,4 +17,8 @@ Improved Error Handling: Error handling has been enhanced with specific error re
 
 Security Enhancements: Password protection has received an update to allow for multiple authentication mechanisms based on configuration. The code now supports both custom username-password authentication and basic authentication using stored user credentials.
 
+
 Code Refactoring and Clean-up: The codebase has undergone refactoring for better readability and maintainability. New modules like 'os' and 'util' are imported for system-related functionalities, and deprecated modules are removed. The updated code showcases a more organized and efficient structure.
+
+Code Refactoring and Clean-up: The codebase has undergone refactoring for better readability and maintainability. New modules like 'os' and 'util' are imported for system-related functionalities, and deprecated modules are removed. The updated code showcases a more organized and efficient structure.
+

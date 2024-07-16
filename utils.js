@@ -1,13 +1,16 @@
-import os from 'os';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-import logger from './logger.js';
+import os from "os";
+import { exec } from "child_process";
+import { promisify } from "util";
+import logger from "./logger.js";
+
 
 const execPromise = promisify(exec);
 
 export const getTotalDiskSpace = () => {
   const totalDiskSpaceInBytes = os.totalmem();
-  const totalDiskSpaceInGB = (totalDiskSpaceInBytes / (1024 ** 3)).toFixed(2) + " GB";
+
+  const totalDiskSpaceInGB = (totalDiskSpaceInBytes / 1024 ** 3).toFixed(2) + " GB";
+
   return totalDiskSpaceInGB;
 };
 
@@ -21,7 +24,9 @@ export const getNetworkStats = async () => {
     };
     return networkStats;
   } catch (error) {
-    logger.error("Error fetching network stats:", error);
+
+    logger.error("Error fetching network stats: For full log see your log file");
+
     return {
       sent: "N/A",
       received: "N/A",
