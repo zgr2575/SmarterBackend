@@ -1,32 +1,176 @@
-/* 
-This is a default css for smarterbackend fronted stuff ect, keep if you want i have sbe branding 
-everywhere
-*/
+/* Default CSS for SmarterBackend Frontend */
+@import url('./themes/default.css');
+
+/* Apply consistent text color */
 * {
-  color: white;
+  color: var(--text-primary);
+  box-sizing: border-box; /* Ensure consistent box sizing */
 }
-div {
-  background-color: blueviolet;
-  border-radius: 5px;
-  width: 50%;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
+
 body {
+  background-color: var(--background-dark);
   background-attachment: fixed;
-  background-color: rgb(30, 27, 37);
-  padding-top: 36px;
+  margin: 0;
+  font-family: 'Quicksand', Helvetica, sans-serif; /* Ensure font is applied globally */
+  position: relative; /* To position the bubbles container absolutely */
+  overflow: hidden; /* Hide overflow to avoid scrollbars */
 }
+
+/* Bubbles container */
+.bubbles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Ensure it doesn’t interfere with clicks */
+  z-index: -1; /* Place it behind other content */
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  opacity: 0.6;
+  animation: float 20s infinite ease-in-out;
+}
+
+/* Generate multiple bubbles with different sizes, positions, and animation delays */
+.bubble:nth-child(1) {
+  width: 60px;
+  height: 60px;
+  left: 5%;
+  top: 10%;
+  background: rgba(255, 255, 255, 0.4);
+  animation-duration: 15s;
+  animation-delay: 0s;
+}
+
+.bubble:nth-child(2) {
+  width: 80px;
+  height: 80px;
+  left: 25%;
+  top: 20%;
+  background: rgba(255, 255, 255, 0.3);
+  animation-duration: 18s;
+  animation-delay: 2s;
+}
+
+.bubble:nth-child(3) {
+  width: 100px;
+  height: 100px;
+  left: 45%;
+  top: 30%;
+  background: rgba(255, 255, 255, 0.5);
+  animation-duration: 20s;
+  animation-delay: 4s;
+}
+
+.bubble:nth-child(4) {
+  width: 120px;
+  height: 120px;
+  left: 65%;
+  top: 40%;
+  background: rgba(255, 255, 255, 0.4);
+  animation-duration: 22s;
+  animation-delay: 6s;
+}
+
+.bubble:nth-child(5) {
+  width: 90px;
+  height: 90px;
+  left: 85%;
+  top: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  animation-duration: 17s;
+  animation-delay: 3s;
+}
+
+.bubble:nth-child(6) {
+  width: 110px;
+  height: 110px;
+  left: 15%;
+  top: 60%;
+  background: rgba(255, 255, 255, 0.6);
+  animation-duration: 19s;
+  animation-delay: 5s;
+}
+
+.bubble:nth-child(7) {
+  width: 70px;
+  height: 70px;
+  left: 35%;
+  top: 70%;
+  background: rgba(255, 255, 255, 0.4);
+  animation-duration: 16s;
+  animation-delay: 8s;
+}
+
+.bubble:nth-child(8) {
+  width: 80px;
+  height: 80px;
+  left: 55%;
+  top: 80%;
+  background: rgba(255, 255, 255, 0.5);
+  animation-duration: 21s;
+  animation-delay: 10s;
+}
+
+/* Bubbles animation */
+@keyframes float {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-50vh) scale(1.2); /* Float halfway up the viewport and scale up */
+  }
+  100% {
+    transform: translateY(0) scale(1); /* Return to original position and size */
+  }
+}
+
+/* Main content container */
+.content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Ensure content is centered vertically */
+  position: relative; /* Ensure content is on top of bubbles */
+  z-index: 1; /* Place it above the bubbles */
+}
+
+/* Title */
+.title {
+  font-size: 38px;
+  font-family: Quicksand, Helvetica, sans-serif;
+  margin: 0;
+}
+
+/* Description */
+.description {
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  margin: 10px 0;
+}
+
+/* Button styling */
 .button {
-  font: bold 11px Quicksand;
+  font: bold 16px 'Quicksand', sans-serif; /* Adjusted font size for better readability */
   text-decoration: none;
   background-color: #18558d;
-  color: #e6e6e6;
-  padding: 2px 6px 2px 6px;
-  border-top: 1px solid #cccccc00;
-  border-right: 1px solid #33333300;
-  border-bottom: 1px solid #33333300;
-  border-left: 1px solid #cccccc00;
+  color: var(--text-secondary);
+  padding: 10px 20px; /* Increased padding for better usability */
+  border: 1px solid transparent; /* Remove borders, using background color */
   border-radius: 5px;
-  width: 50%;
+  display: inline-block; /* Ensure buttons don't stretch */
+  text-align: center; /* Center text in button */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+  margin: 5px; /* Space between buttons */
+}
+
+.button:hover {
+  background-color: #0f3d6d; /* Darker shade for hover effect */
+  color: #ffffff;
 }
