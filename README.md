@@ -41,21 +41,18 @@ const config = {
   apiUsage: false, // Setting this to true will enable the ability to access this server as an API.
   loggerEnabled: true, // Enable or disable logging
   loggerToFile: true, // Enable or disable logging to a file
-<<<<<<< HEAD
   logFile: 'server.log', // Log file name
   logLevel: 'info', // Log level (error, warn, info, verbose, debug, silly)
   version: 3, // Server version
   updateAvailable: false, // Whether an update is available
   maxRequestSize: '1mb', // Max request size for JSON and URL-encoded data
   staticFolder: 'static', // Static files folder
-=======
   logFile: "server.log", // Log file name
   logLevel: "info", // Log level (error, warn, info, verbose, debug, silly)
   version: 3, // Server version
   updateAvailable: false, // Whether an update is available
   maxRequestSize: "1mb", // Max request size for JSON and URL-encoded data
   staticFolder: "static", // Static files folder
->>>>>>> 8791968 (Version 6: API UPDATE!!!)
 };
 
 export default config;
@@ -66,19 +63,10 @@ export default config;
 Setup logging using Winston in `logger.js`:
 
 ```javascript
-<<<<<<< HEAD
-import winston from 'winston';
-import config from './config.js';
-
-const transports = [
-  new winston.transports.Console(),
-];
-=======
 import winston from "winston";
 import config from "./config.js";
 
 const transports = [new winston.transports.Console()];
->>>>>>> 8791968 (Version 6: API UPDATE!!!)
 
 if (config.loggerToFile) {
   transports.push(new winston.transports.File({ filename: config.logFile }));
@@ -88,11 +76,7 @@ const logger = winston.createLogger({
   level: config.logLevel,
   format: winston.format.combine(
     winston.format.colorize(),
-<<<<<<< HEAD
-    winston.format.simple()
-=======
     winston.format.simple(),
->>>>>>> 8791968 (Version 6: API UPDATE!!!)
   ),
   transports: transports,
 });
@@ -105,15 +89,6 @@ export default logger;
 Organized route handling in `routes.js`:
 
 ```javascript
-<<<<<<< HEAD
-import express from 'express';
-import { getServerStats } from './utils.js';
-import logger from './logger.js';
-
-const router = express.Router();
-
-router.get('/d/data', async (req, res) => {
-=======
 import express from "express";
 import { getServerStats } from "./utils.js";
 import logger from "./logger.js";
@@ -121,7 +96,6 @@ import logger from "./logger.js";
 const router = express.Router();
 
 router.get("/d/data", async (req, res) => {
->>>>>>> 8791968 (Version 6: API UPDATE!!!)
   try {
     const serverStats = await getServerStats();
     logger.info("Server data requested and sent.");
@@ -140,25 +114,15 @@ export default router;
 Utility functions in `utils.js`:
 
 ```javascript
-<<<<<<< HEAD
-import os from 'os';
-import { promisify } from 'util';
-import { exec } from 'child_process';
-=======
 import os from "os";
 import { promisify } from "util";
 import { exec } from "child_process";
->>>>>>> 8791968 (Version 6: API UPDATE!!!)
 
 const execPromise = promisify(exec);
 
 export const getTotalDiskSpace = () => {
   const totalDiskSpaceInBytes = os.totalmem();
-<<<<<<< HEAD
-  return (totalDiskSpaceInBytes / (1024 ** 3)).toFixed(2) + " GB";
-=======
   return (totalDiskSpaceInBytes / 1024 ** 3).toFixed(2) + " GB";
->>>>>>> 8791968 (Version 6: API UPDATE!!!)
 };
 
 export const getNetworkStats = async () => {
@@ -183,12 +147,7 @@ export const getServerStats = async () => {
     version: 3,
     updateAvailable: false,
     serverUptime: process.uptime(),
-<<<<<<< HEAD
-    serverMemory: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + " MB",
-=======
-    serverMemory:
-      (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + " MB",
->>>>>>> 8791968 (Version 6: API UPDATE!!!)
+    serverMemory:   (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + " MB",
     serverId: Math.floor(Math.random() * 101),
     serverIdentity: "SBE SERVER",
     cpuUsage: process.cpuUsage(),
@@ -280,13 +239,13 @@ Handles any server errors and returns a 500 Internal Server Error response.
 ## Changelog
 ### v6.0.0
 
-- **API**: The long awaited API support, using Swagger for doccumentation.
+- **API**: The long-awaited API support, using Swagger for documentation.
 - **Logging Improvements**: Made logging a lot prettier.
 - **Configuration Enhancements**: Improved `config.js` with additional settings.
 - **Bug Fixes**: Fixed known bugs.
-- **Routing Fix**: So... I was kinda tired last update and accidently removed the routing feature, but its back! With new improvements through out router.
+- **Routing Fix**: So... I was kinda tired last update and accidentally removed the routing feature, but its back! With new improvements through our router.
 - **Utility Enhancements**: utils.js got a complete recode, with `.
-- **Rate Limiting**: With the new api, a rate limit system is nessesary to prevent abuse.
+- **Rate Limiting**: With the new api, a rate limit system is necessary to prevent abuse.
 - **Enhanced Error Handling**: Added a centralized error-handling middleware.
   Full Dev Notes:
   The logger is not initialized multiple times, preventing duplicate log entries.
